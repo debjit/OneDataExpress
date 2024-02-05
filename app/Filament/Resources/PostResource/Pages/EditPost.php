@@ -4,6 +4,9 @@ namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Forms\Form;
+
 use Filament\Resources\Pages\EditRecord;
 
 class EditPost extends EditRecord
@@ -17,4 +20,10 @@ class EditPost extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    // public static function form(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([]);
+    // }
 }

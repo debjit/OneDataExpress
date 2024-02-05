@@ -31,6 +31,9 @@ class ViewPost extends ViewRecord
             Action::make('activities')
                 ->url(fn ($record) => PostResource::getUrl('activities', ['record' => $record]))
                 ->color('info'),
+            Action::make('tiptapEditor')
+                ->url(fn ($record) => PostResource::getUrl('edit-tiptap', ['record' => $record]))
+                ->color('info'),
             Action::make('Publish')
                 ->label(fn ($record) => $record->published ? 'Re-Publish' : 'Publish')
                 ->form([
