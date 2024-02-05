@@ -106,6 +106,7 @@ class PostResource extends Resource
             'create' => Pages\CreatePost::route('/create'),
             'view' => Pages\ViewPost::route('/{record}'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+            'edit-tiptap' => Pages\EditHtmlUsingTipTap::route('/{record}/edit/tiptap'),
             'activities' => Pages\LogPagesActivity::route('/{record}/activities')
         ];
     }
