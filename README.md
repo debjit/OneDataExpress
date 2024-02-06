@@ -1,3 +1,9 @@
+```
+
+Please note that the dev branch is for future development and not related to the Hashnode hackathon. This can cause braking changes. So treat this as separate from the main.
+
+```
+
 # OneDataExpress
 Bridging the Gap, Transforming Data with Ease.
 
@@ -7,15 +13,3 @@ Bridging the Gap, Transforming Data with Ease.
 [Hackathon Entry](https://debjit.hashnode.dev/hashnode-api-hackathon-project-onedataexpress)
 
 [Video Tutorial](https://vimeo.com/909242092)
-
-## Here is a small recap of install
-
-```
-composer install
-copy .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-npm i
-npm run dev
-
-```

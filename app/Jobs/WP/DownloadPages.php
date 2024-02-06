@@ -76,9 +76,8 @@ class DownloadPages implements ShouldQueue
 
                 // $items[] = $item;
 
-                $createdPost =  Post::updateOrCreate(["site_id"=> $item['site_id'], 'post_id'=>$item['post_id']], $item);
+                $createdPost =  Post::updateOrCreate(["site_id" => $item['site_id'], 'post_id' => $item['post_id']], $item);
                 dispatch(new convertPostToMarkdown($createdPost));
-
             }
 
             // $this->site->posts()->createMany($items);
@@ -92,7 +91,7 @@ class DownloadPages implements ShouldQueue
             // 'Authorization' => 'Bearer ' . $this->apiToken,
             'Content-Type' => 'application/json',
             // "User-Agent" => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0'
-        ])
+            ])
             ->withOptions(['verify' => false])
             ->get($url);
 
