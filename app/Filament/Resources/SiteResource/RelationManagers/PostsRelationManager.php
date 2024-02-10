@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SiteResource\RelationManagers;
 
+use App\Enums\SiteStatus;
 use App\Filament\Resources\PostResource;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -33,11 +34,7 @@ class PostsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                 ->url(fn ($record) => PostResource::getUrl('view', ['record' => $record])),
-                Tables\Columns\SelectColumn::make('status')->options([
-                    0 => 'draft',
-                    1 => 'Published',
-                    2 => 'Error',
-                ])->disabled()->selectablePlaceholder(false),
+                Tables\Columns\SelectColumn::make('status')->options(SiteStatus::class)->disabled()->selectablePlaceholder(false),
             ])
             ->filters([
                 //

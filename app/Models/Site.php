@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SiteStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,7 @@ class Site extends Model
     protected $casts = [
         'meta' => 'array',
         'details' => 'array',
+        'status' => SiteStatus::class,
     ];
 
     use HasFactory;

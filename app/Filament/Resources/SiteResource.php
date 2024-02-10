@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\SiteStatus;
 use App\Filament\Resources\SiteResource\Pages;
 use App\Filament\Resources\SiteResource\RelationManagers\PostsRelationManager;
 use App\Jobs\Hashnode\PublishAllSitePosts;
@@ -99,14 +100,20 @@ class SiteResource extends Resource
                         ->openUrlInNewTab(),
                     TextEntry::make('description')
                         ->markdown(),
+                    // Select::make('status')
+                    //     ->options(SiteStatus::class)
                     TextEntry::make('status')
+                        // ->label('Status')
                         ->badge()
-                        ->color(fn (string $state): string => match ($state) {
-                            default => 'gray',
-                            1 => 'success',
-                            2 => 'success',
-                            3 => 'danger',
-                        })
+                        ->html(fn ($record): string => $record->status->getLabel()),
+                    // TextEntry::make('status')
+                    //     ->badge()
+                    // ->color(fn (string $state): string => match ($state) {
+                    //     default => 'gray',
+                    //     1 => 'success',
+                    //     2 => 'success',
+                    //     3 => 'danger',
+                    // })
                 ]),
             Section::make('Site Status')
                 ->description('Your sites status.')
