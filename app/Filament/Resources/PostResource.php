@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PostStatus;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
@@ -68,7 +69,9 @@ class PostResource extends Resource
         return $table
             ->columns([
                 IconColumn::make('published')
-                ->boolean(),
+                    ->boolean(),
+                IconColumn::make('status')
+                    ->icon(fn ($record) => $record->status->getIcon()),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
