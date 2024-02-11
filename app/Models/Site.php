@@ -20,7 +20,6 @@ class Site extends Model
         'value',
         'status',
         'details',
-        'error',
         'description',
         'meta',
     ];

@@ -100,32 +100,18 @@ class SiteResource extends Resource
                         ->openUrlInNewTab(),
                     TextEntry::make('description')
                         ->markdown(),
-                    // Select::make('status')
-                    //     ->options(SiteStatus::class)
                     TextEntry::make('status')
-                        // ->label('Status')
                         ->badge()
                         ->html(fn ($record): string => $record->status->getLabel()),
-                    // TextEntry::make('status')
-                    //     ->badge()
-                    // ->color(fn (string $state): string => match ($state) {
-                    //     default => 'gray',
-                    //     1 => 'success',
-                    //     2 => 'success',
-                    //     3 => 'danger',
-                    // })
                 ]),
-            Section::make('Site Status')
-                ->description('Your sites status.')
+            Section::make('Site Actions')
+                ->description('Gets all the information from remote site, Start fetching data or publish all the data.')
                 ->icon('heroicon-o-globe-alt')
                 ->schema([
-                    IconEntry::make('status')
-                        ->label("Site Status.")
-                        ->boolean(),
                     Actions::make([
                         Action::make('Start / Stop')
-                            ->label(fn ($record) => $record->status == 0 ? "Start" : "Stop")
-                            ->icon(fn ($record) => $record->status == 0 ? "heroicon-m-play" : "heroicon-m-stop")
+                            ->label(fn ($record) => $record->status->value == 0 ? "Prepare" : "Re Fetch")
+                            ->icon(fn ($record) => $record->status->value == 0 ? "heroicon-m-play" : "heroicon-m-forward")
                             ->requiresConfirmation()
                             ->action(function ($record) {
                                 // $record = $this->record;
@@ -149,13 +135,6 @@ class SiteResource extends Resource
                                     ->success()
                                     ->send();
                             }),
-                        // Action::make('reset')
-                        //     ->icon('heroicon-m-x-mark')
-                        //     ->color('danger')
-                        //     ->requiresConfirmation()
-                        //     ->action(function ($record) {
-                        //         // $resetStars();
-                        //     }),
                         Action::make('Start Fetching posts')
                             ->disabled(fn ($record) => $record->status == 0 ? true : false)
                             ->action(function ($record) {
@@ -174,8 +153,6 @@ class SiteResource extends Resource
                                     ->required(),
                             ])
                             ->action(function (array $data, $record): void {
-                                // $record->author()->associate($data['authorId']);
-                                // $record->save();
                                 // Dispatch the task
                                 dispatch(new PublishAllSitePosts($record->id, $data['hashnodeId']));
                                 Notification::make()
@@ -183,7 +160,6 @@ class SiteResource extends Resource
                                     ->success()
                                     ->send();
                             })->slideOver()
-                        // ->visible(fn ($record) => !$record->published),
                     ]),
                 ]),
         ]);

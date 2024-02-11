@@ -43,9 +43,9 @@ class ViewPost extends ViewRecord
                         ->required(),
                     Checkbox::make('is_canonical')
                         ->label('Are you republishing?')
-                        ->helperText(fn ($record) => $record->body['link'])
+                        ->helperText(fn ($record) => $record->meta['link'])
                         ->hint('Use old blog link as Canonical URL')
-                        ->visible(fn ($record) => !empty($record->body['link']))
+                        ->visible(fn ($record) => !empty($record->meta['link']))
                 ])
                 ->action(function (array $data, $record): void {
                     dispatch(new PublishAPost($record->id, $data['hashnodeId'], $settings = [
@@ -71,8 +71,10 @@ class ViewPost extends ViewRecord
                     ->icon('heroicon-o-globe-alt')
                     ->columns(4)
                     ->schema([
-                        IconEntry::make('published')
-                            ->boolean(),
+                        TextEntry::make('status')
+                        // ->badge(fn ($record) => $record->status->getColor())
+                            // ->icon(fn ($record) => $record->status->getIcon()),
+                            ->badge(),
                         TextEntry::make('title')
                             ->label('Website Title')
                             ->weight(FontWeight::Bold)
@@ -85,7 +87,8 @@ class ViewPost extends ViewRecord
                             ->openUrlInNewTab()
                             ->weight(FontWeight::Bold)
                             ->columnSpan(4)
-                            ->visible(fn ($record) => $record->published),
+                            ->badge()
+                            ->visible(fn ($record) => $record->status->value === 3),
 
                     ]),
                 Tabs::make('Tabs')
@@ -102,7 +105,7 @@ class ViewPost extends ViewRecord
                             ->icon('heroicon-m-eye')
                             ->iconPosition(IconPosition::After)
                             ->schema([
-                                TextEntry::make('body.content')->html(),
+                                TextEntry::make('body')->html(),
                             ]),
                     ])
                     ->columnSpan(2)

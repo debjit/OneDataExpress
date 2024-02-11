@@ -26,11 +26,9 @@ class Post extends Model
     ];
 
     protected $casts = [
-        'body' => 'array',
         'media' => 'array',
-        'output' => 'array',
         'meta' => 'array',
-        'published' => 'boolean',
+        'details' => 'array',
         'status'=>PostStatus::class
     ];
 
