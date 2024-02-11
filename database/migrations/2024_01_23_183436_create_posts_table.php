@@ -16,11 +16,10 @@ return new class extends Migration
             $table->string('title');
             $table->integer('post_id');
             $table->integer('status')->default(0);
-            $table->json('body')->nullable();
+            $table->longText('body')->nullable();
+            $table->longText('output')->nullable();
             $table->json('media')->nullable();
-            $table->text('output')->nullable();
             $table->json('meta')->nullable();
-            $table->tinyInteger('published')->nullable()->default(0);
             $table->foreignId('site_id')
                 ->constrained()
                 ->onDelete('cascade');

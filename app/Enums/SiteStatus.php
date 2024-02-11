@@ -16,4 +16,12 @@ enum SiteStatus: int implements HasLabel
     {
         return $this->name;
     }
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::DRAFT => 'heroicon-o-pencil-square',
+            self::PUBLISHED => 'heroicon-o-shield-check',
+            self::ERROR => 'heroicon-o-exclamation-triangle',
+        };
+    }
 }
