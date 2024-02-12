@@ -205,9 +205,8 @@ class WPApiV2
         }
     }
 
-    public static function getPosts($site, $count = 5)
+    public static function getPosts($site, $count = 5, $settings = ['convert' => true])
     {
-
 
         try {
 
@@ -229,7 +228,7 @@ class WPApiV2
                 // 4. Download the total pages.
                 for ($i = 1; $i <= $limitCount; $i++) {
                     $url = $site->url . "/wp-json/wp/v2/posts?per_page=" . $count . "&page=" . $i;
-                    dispatch(new DownloadPages($site, $url));
+                    dispatch(new DownloadPages($site, $url, $settings));
                 }
             }
 

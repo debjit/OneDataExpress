@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource;
 use App\Jobs\Hashnode\PublishAPost;
 use App\Models\Setting;
+use App\WP\WPMarkdownFix;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -18,6 +19,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use League\HTMLToMarkdown\HtmlConverter;
 
 class ViewPost extends ViewRecord
 {
@@ -28,6 +30,17 @@ class ViewPost extends ViewRecord
         return [
             Actions\EditAction::make(),
             Actions\DeleteAction::make(),
+            Action::make('Convert')->action(function (array $data, $record): void {
+                $converter = new HtmlConverter();
+                $markdown = $converter->convert($record->body);
+                $sanitaseMarkdown = new WPMarkdownFix($markdown);
+                $output = $sanitaseMarkdown->replaceFiguresInMarkdown();
+                $record->update(['output' => $output]);
+            })
+                ->modalHeading('Convert Post?')
+                ->requiresConfirmation()
+                ->modalDescription('Are you sure wanted to convert? This will replace old markdown.')
+                ->modalSubmitActionLabel('Convert'),
             Action::make('activities')
                 ->url(fn ($record) => PostResource::getUrl('activities', ['record' => $record]))
                 ->color('info'),
@@ -72,7 +85,7 @@ class ViewPost extends ViewRecord
                     ->columns(4)
                     ->schema([
                         TextEntry::make('status')
-                        // ->badge(fn ($record) => $record->status->getColor())
+                            // ->badge(fn ($record) => $record->status->getColor())
                             // ->icon(fn ($record) => $record->status->getIcon()),
                             ->badge(),
                         TextEntry::make('title')

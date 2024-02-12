@@ -33,8 +33,9 @@ class PostsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                ->url(fn ($record) => PostResource::getUrl('view', ['record' => $record])),
-                Tables\Columns\SelectColumn::make('status')->options(SiteStatus::class)->disabled()->selectablePlaceholder(false),
+                    ->url(fn ($record) => PostResource::getUrl('view', ['record' => $record])),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
             ])
             ->filters([
                 //
