@@ -35,7 +35,10 @@ class convertPostToMarkdown implements ShouldQueue
             $markdown = $converter->convert($this->post->body);
             $sanitaseMarkdown = new WPMarkdownFix($markdown);
             $output = $sanitaseMarkdown->replaceFiguresInMarkdown();
-            $this->post->update(['output' => $output]);
+            $this->post->update([
+                'output' => $output,
+                'status' => 1
+            ]);
         } catch (\Throwable $th) {
             logger()->error(
                 'Error converting post to markdown' . $th->getMessage()

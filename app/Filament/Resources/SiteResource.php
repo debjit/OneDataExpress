@@ -6,11 +6,14 @@ use App\Enums\SiteStatus;
 use App\Filament\Resources\SiteResource\Pages;
 use App\Filament\Resources\SiteResource\RelationManagers\PostsRelationManager;
 use App\Jobs\Hashnode\PublishAllSitePosts;
+use App\Jobs\WP\convertPostToMarkdown;
 use App\Models\Setting;
 use App\Models\Site;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Actions\Action;
@@ -137,14 +140,28 @@ class SiteResource extends Resource
                             }),
                         Action::make('Start Fetching posts')
                             ->disabled(fn ($record) => $record->status == 0 ? true : false)
-                            ->action(function ($record) {
-                                \App\WP\WPApiV2::getPosts($record);
+                            ->form([
+                                Toggle::make('convert_markdown', true)
+                                    ->label('Prepare the post after getting the post information ?')
+                                    ->default(true)
+                                    ->onIcon('heroicon-m-bolt')
+                                    ->offIcon('heroicon-m-stop')
+                            ])
+                            ->action(function (array $data, $record) {
+                                $isConvertedOnTheFly = ['convert' =>  $data['convert_markdown'] ? true : false];
+                                // refactor
+                                \App\WP\WPApiV2::getPosts($record, 5, $isConvertedOnTheFly);
                                 Notification::make()
                                     ->title('We have started fetching data. All jobs are queued.' . $record->title)
                                     ->seconds(5)
                                     ->success()
                                     ->send();
-                            }),
+                            })
+                            ->slideOver()
+                        // ->modalHeading('Are you sure get all the posts?')
+                        // ->requiresConfirmation()
+                        // ->modalSubmitActionLabel('Get Posts.')
+                        ,
                         Action::make('Publish All')
                             ->form([
                                 Select::make('hashnodeId')
@@ -159,9 +176,28 @@ class SiteResource extends Resource
                                     ->title('Job dispatched successfully. Please refresh the page after some time to get the latest information.')
                                     ->success()
                                     ->send();
-                            })->slideOver()
+                            })->slideOver(),
+
                     ]),
+
                 ]),
+            Section::make('Site Custom Actions')
+                ->description('You can run this action whenever you need them. But please remember to read the information first, or you may lose your data.')
+                ->icon('heroicon-o-globe-alt')
+                ->schema([
+                    Actions::make([
+                        Action::make('Preapare all Posts')
+                            ->action(function ($record) {
+                                foreach ($record->posts as $post) {
+                                    dispatch(new convertPostToMarkdown($post));
+                                };
+                            })
+                            ->modalHeading('Preapare all posts for uploading?')
+                            ->requiresConfirmation()
+                            ->modalDescription('Are you sure wanted to convert? This will replace all old page output.')
+                            ->modalSubmitActionLabel('Preapare for Upload.'),
+                    ]),
+                ])
         ]);
     }
 
