@@ -1,11 +1,8 @@
-```
-
-Please note that the dev branch is for future development and not related to the Hashnode hackathon. This can cause braking changes. So treat this as separate from the main.
-
-```
-
 # OneDataExpress
 Bridging the Gap, Transforming Data with Ease.
+
+Take back the control of your content.
+
 
 
 [How to Setup](https://debjit.hashnode.dev/how-to-setup-application-locally)

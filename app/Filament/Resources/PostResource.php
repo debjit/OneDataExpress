@@ -68,8 +68,7 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                IconColumn::make('status')
-                    ->icon(fn ($record) => $record->status->getIcon()),
+                IconColumn::make('status'),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
