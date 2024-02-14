@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\SiteResource\RelationManagers;
 
+use App\Enums\SiteStatus;
+use App\Filament\Resources\PostResource;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -30,12 +32,10 @@ class PostsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\SelectColumn::make('status')->options([
-                    0 => 'Schedule?',
-                    1 => 'Success',
-                    2 => 'Error',
-                ])->disabled()->selectablePlaceholder(false),
+                Tables\Columns\TextColumn::make('title')
+                    ->url(fn ($record) => PostResource::getUrl('view', ['record' => $record])),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
             ])
             ->filters([
                 //

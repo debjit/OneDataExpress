@@ -17,10 +17,9 @@ return new class extends Migration
             $table->string('url');
             $table->string('key')->nullable();
             $table->string('value')->nullable();
-            $table->integer('error')->default(0);
             $table->integer('status')->default(0);
             $table->json('meta')->nullable();
-            $table->json('details')->nullable();
+            $table->text('details')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

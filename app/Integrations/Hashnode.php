@@ -79,7 +79,8 @@ class Hashnode
             }
          }
         }';
-        $currentPostTags = $currentPost->body['tags'];
+
+        $currentPostTags = $currentPost->meta['tags'];
         $allTagsFromSite = $currentPost->site['details']['tags'];
 
         // Tags needed
@@ -103,9 +104,9 @@ class Hashnode
         }
 
         $input = [
-            "title" => $currentPost->body['title'],
+            "title" => $currentPost->title,
             "contentMarkdown" => $currentPost->output,
-            "slug" => $currentPost->body['slug'],
+            "slug" => $currentPost->meta['slug'],
             "disableComments" => true,
             "publicationId" => $this->publicationId,
             "tags" => $tags
@@ -126,7 +127,7 @@ class Hashnode
         ];
 
         if (!empty($settings['originalArticleURL'])) {
-            $input['originalArticleURL'] = $currentPost->body['link'];
+            $input['originalArticleURL'] = $currentPost->meta['link'];
         }
 
         $variables = [
@@ -154,8 +155,8 @@ class Hashnode
 
             // $post = $data['data']['publishPost']['post'];
             // $result = $data['data'];
-            $currentPost->meta = $data['data']['publishPost'];
-            $currentPost->published = 1;
+            $currentPost->meta = array_merge($currentPost->meta, $data['data']['publishPost']);
+            $currentPost->status = 3;
             $currentPost->save();
             return true;
         } else {

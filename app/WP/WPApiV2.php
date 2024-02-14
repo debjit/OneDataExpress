@@ -205,9 +205,8 @@ class WPApiV2
         }
     }
 
-    public static function getPosts($site, $count = 5)
+    public static function getPosts($site, $count = 5, $settings = ['convert' => true])
     {
-
 
         try {
 
@@ -216,19 +215,20 @@ class WPApiV2
             }
 
             // 1. Get the count.
-            // 2. Get the data.
-            // 3. Get the total pages.
-            // 4. Download the total pages.
             $baseUrl = $site->url . "/wp-json/wp/v2/posts?per_page=1";
 
+            // 2. Get the data.
             $fetchDataResponse = self::fetchFromUrl($baseUrl);
+
+            // 3. Get the total pages.
             if ($fetchDataResponse->ok()) {
                 $totalPages = $fetchDataResponse->header('X-WP-TotalPages');
                 $limitCount = (int) ceil($totalPages / $count);
 
+                // 4. Download the total pages.
                 for ($i = 1; $i <= $limitCount; $i++) {
                     $url = $site->url . "/wp-json/wp/v2/posts?per_page=" . $count . "&page=" . $i;
-                    dispatch(new DownloadPages($site, $url));
+                    dispatch(new DownloadPages($site, $url, $settings));
                 }
             }
 
@@ -253,3 +253,4 @@ class WPApiV2
         self::convertToMarkdown($post);
     }
 }
+

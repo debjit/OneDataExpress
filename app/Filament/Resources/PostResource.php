@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PostStatus;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
@@ -67,8 +68,7 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                IconColumn::make('published')
-                ->boolean(),
+                IconColumn::make('status'),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
@@ -106,6 +106,7 @@ class PostResource extends Resource
             'create' => Pages\CreatePost::route('/create'),
             'view' => Pages\ViewPost::route('/{record}'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+            'edit-tiptap' => Pages\EditHtmlUsingTipTap::route('/{record}/edit/tiptap'),
             'activities' => Pages\LogPagesActivity::route('/{record}/activities')
         ];
     }

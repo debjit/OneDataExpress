@@ -26,13 +26,13 @@ class DownloadPages implements ShouldQueue
      */
     public $site;
     public $url;
-    public $multi = false;
+    public $settings;
 
-    public function __construct(Site $site, $url, $multi = false)
+    public function __construct(Site $site, $url, $settings = ['convert' => true])
     {
         $this->site = $site;
         $this->url = $url;
-        $this->multi = $multi;
+        $this->settings = $settings;
     }
 
     /**
@@ -46,20 +46,16 @@ class DownloadPages implements ShouldQueue
 
         if ($fetchDataResponse->ok()) {
 
-            // $items = [];
-
             foreach ($data as $value) {
                 $item = [
                     'site_id' => $this->site->id,
                     'status' => 0,
                     'title' => $value['title']['rendered'],
                     'post_id' => $value['id'],
-                    'body' => [
-                        'title' => $value['title']['rendered'],
+                    'body' => $value['content']['rendered'],
+                    'meta' => [
                         'slug' => $value['slug'],
-                        'status' => $value['status'],
                         'link' => $value['link'],
-                        'content' => $value['content']['rendered'],
                         'excerpt' => $value['excerpt']['rendered'],
                         'author' => $value['author'],
                         'featured_media' => $value['featured_media'],
@@ -67,18 +63,14 @@ class DownloadPages implements ShouldQueue
                         'sticky' => $value['sticky'],
                         'categories' => $value['categories'],
                         'tags' => $value['tags'],
-                    ],
-                    // 'output'=> WPApiV2::convertHtmlToMarkdown($value['content']['rendered'])
-                    'meta' => [
-                        'raw_response' => $value
                     ]
                 ];
 
-                // $items[] = $item;
+                $createdPost =  Post::updateOrCreate(["site_id" => $item['site_id'], 'post_id' => $item['post_id']], $item);
 
-                $createdPost =  Post::updateOrCreate(["site_id"=> $item['site_id'], 'post_id'=>$item['post_id']], $item);
+                if ($this->settings['convert']) {
                 dispatch(new convertPostToMarkdown($createdPost));
-
+                }
             }
 
             // $this->site->posts()->createMany($items);

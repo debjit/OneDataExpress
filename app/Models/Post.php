@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PostStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,13 +22,14 @@ class Post extends Model
         'output',
         'meta',
         'site_id',
+        'published'
     ];
 
     protected $casts = [
-        'body' => 'array',
         'media' => 'array',
-        'output' => 'array',
         'meta' => 'array',
+        'details' => 'array',
+        'status'=>PostStatus::class
     ];
 
 
